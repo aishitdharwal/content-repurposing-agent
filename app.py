@@ -5,10 +5,10 @@ import streamlit as st
 from scraper import ContentScraper
 from llm_service import ContentRepurposer
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv()
+# load_dotenv()
 
 # Page configuration
 st.set_page_config(
