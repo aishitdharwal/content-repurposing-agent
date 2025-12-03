@@ -132,8 +132,20 @@ class ContentScraper:
             # Add .json to the URL to get JSON response
             json_url = url.rstrip('/') + '.json'
             
-            response = requests.get(json_url, headers=self.headers, timeout=10)
+            # Update headers to look more like a real browser
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+                'Accept': 'application/json, text/html',
+                'Accept-Language': 'en-US,en;q=0.9'
+            }
+            
+            response = requests.get(json_url, headers=headers, timeout=10)
             response.raise_for_status()
+            
+            # Check content type
+            content_type = response.headers.get('content-type', '')
+            if 'json' not in content_type.lower():
+                raise ValueError("Reddit returned HTML instead of JSON. The URL may be invalid or Reddit is blocking the request.")
             
             data = response.json()
             

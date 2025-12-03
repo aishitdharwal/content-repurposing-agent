@@ -1,6 +1,9 @@
-streamlit
+fastapi
+uvicorn
 anthropic
 beautifulsoup4
 requests
 python-dotenv
 lxml
+python-multipart
+jinja2
