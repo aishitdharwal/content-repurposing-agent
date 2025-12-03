@@ -65,7 +65,9 @@ async def scrape_and_generate(
     url: str = Form(None),
     manual_content: str = Form(None),
     platform: str = Form(...),
-    api_key: str = Form(...)
+    model_type: str = Form(...),
+    api_key: str = Form(None),
+    base_url: str = Form(None)
 ):
     """Combined endpoint - scrape URL or use manual content, then generate posts"""
     try:
@@ -84,9 +86,22 @@ async def scrape_and_generate(
             content = manual_content
             author = "Manual Input"
         
-        # Generate posts
-        # repurposer = ContentRepurposer(api_key=api_key)
-        repurposer = ContentRepurposerSLM(base_url="http://3.110.232.158:11434")
+        # Generate posts based on model type
+        if model_type == "llm":
+            if not api_key:
+                return JSONResponse(
+                    content={"error": "API key is required for LLM"},
+                    status_code=400
+                )
+            repurposer = ContentRepurposer(api_key=api_key)
+        else:  # slm
+            if not base_url:
+                return JSONResponse(
+                    content={"error": "Base URL is required for SLM"},
+                    status_code=400
+                )
+            repurposer = ContentRepurposerSLM(base_url=base_url)
+        
         posts = repurposer.generate_linkedin_posts(
             original_content=content,
             platform=platform,
