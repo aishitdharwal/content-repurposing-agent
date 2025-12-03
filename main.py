@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from scraper import ContentScraper
 from llm_service import ContentRepurposer
+from slm_service import ContentRepurposerSLM
 import os
 from dotenv import load_dotenv
 
@@ -84,7 +85,8 @@ async def scrape_and_generate(
             author = "Manual Input"
         
         # Generate posts
-        repurposer = ContentRepurposer(api_key=api_key)
+        # repurposer = ContentRepurposer(api_key=api_key)
+        repurposer = ContentRepurposerSLM(base_url="http://3.110.232.158:11434")
         posts = repurposer.generate_linkedin_posts(
             original_content=content,
             platform=platform,
